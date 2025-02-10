@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Counter - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Word Counter</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-6">
+                <textarea id="input-text" 
+                    class="w-full h-64 p-4 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                    placeholder="Enter your text here..."></textarea>
+                
+                <!-- Statistics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="stat-box">
+                        <h3>Words</h3>
+                        <p id="word-count">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Characters</h3>
+                        <p id="char-count">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Sentences</h3>
+                        <p id="sentence-count">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Paragraphs</h3>
+                        <p id="paragraph-count">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../script.js"></script>
+    <script>
+        // Tool-specific JavaScript
+        const textarea = document.getElementById('input-text');
+        const wordCount = document.getElementById('word-count');
+        const charCount = document.getElementById('char-count');
+        const sentenceCount = document.getElementById('sentence-count');
+        const paragraphCount = document.getElementById('paragraph-count');
+
+        textarea.addEventListener('input', () => {
+            const text = textarea.value;
+            
+            // Count words
+            wordCount.textContent = text.trim().split(/\s+/).filter(Boolean).length;
+            
+            // Count characters
+            charCount.textContent = text.length;
+            
+            // Count sentences
+            sentenceCount.textContent = text.split(/[.!?]+/).filter(Boolean).length;
+            
+            // Count paragraphs
+            paragraphCount.textContent = text.split(/\n\s*\n/).filter(Boolean).length;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video to GIF Converter - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Video to GIF Converter</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-8">
+                <!-- Upload Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Upload Video</h3>
+                        <button id="clear-file" class="tool-btn hidden">
+                            <i class="fas fa-trash-alt mr-1"></i>Clear
+                        </button>
+                    </div>
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8">
+                        <div class="text-center">
+                            <input type="file" id="file-input" accept="video/*" class="hidden">
+                            <label for="file-input" class="cursor-pointer">
+                                <div class="space-y-4">
+                                    <i class="fas fa-film text-4xl text-gray-400"></i>
+                                    <div class="text-lg">
+                                        Drag & drop video here or <span class="text-indian-saffron">browse</span>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        Supported formats: MP4, MOV, AVI, WebM
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Preview -->
+                <div id="preview-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Video Preview</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <div id="video-info" class="flex items-center space-x-4 mb-4">
+                            <i class="fas fa-film text-2xl text-indian-saffron"></i>
+                            <div>
+                                <div id="file-name" class="font-medium"></div>
+                                <div id="file-info" class="text-sm text-gray-500"></div>
+                            </div>
+                        </div>
+                        <video id="video-preview" class="w-full rounded-lg" controls>
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+
+                <!-- GIF Options -->
+                <div id="options-section" class="hidden space-y-6">
+                    <h3 class="text-lg font-semibold">GIF Options</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Dimensions -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Output Size</label>
+                            <select id="size-option" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="original">Original Size</option>
+                                <option value="720">720p</option>
+                                <option value="480">480p</option>
+                                <option value="360">360p</option>
+                                <option value="custom">Custom Size</option>
+                            </select>
+                            <div id="custom-size" class="hidden mt-2 grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-xs">Width (px)</label>
+                                    <input type="number" id="custom-width" class="w-full p-2 rounded border dark:bg-gray-800">
+                                </div>
+                                <div>
+                                    <label class="text-xs">Height (px)</label>
+                                    <input type="number" id="custom-height" class="w-full p-2 rounded border dark:bg-gray-800">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Frame Rate -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Frame Rate (FPS)</label>
+                            <select id="fps-option" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="24">24 FPS</option>
+                                <option value="30">30 FPS</option>
+                                <option value="15">15 FPS (Smaller file)</option>
+                                <option value="10">10 FPS (Smallest file)</option>
+                            </select>
+                        </div>
+
+                        <!-- Quality -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Quality</label>
+                            <select id="quality-option" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="high">High (Larger file)</option>
+                                <option value="medium">Medium (Recommended)</option>
+                                <option value="low">Low (Smaller file)</option>
+                            </select>
+                        </div>
+
+                        <!-- Loop -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Loop Options</label>
+                            <select id="loop-option" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="infinite">Infinite Loop</option>
+                                <option value="once">Play Once</option>
+                                <option value="3">Loop 3 Times</option>
+                                <option value="5">Loop 5 Times</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Trim Video -->
+                    <div class="space-y-4">
+                        <h4 class="font-medium">Trim Video</h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="trim-video" class="mr-2">
+                                    Enable Trimming
+                                </label>
+                            </div>
+                            <div id="trim-controls" class="hidden space-y-4">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Start Time</label>
+                                        <input type="text" id="start-time" placeholder="00:00"
+                                            class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">End Time</label>
+                                        <input type="text" id="end-time" placeholder="00:10"
+                                            class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Convert Button -->
+                <div class="text-center">
+                    <button id="convert-btn" class="px-8 py-3 bg-indian-saffron text-white rounded-lg hover:bg-indian-saffron/90 hidden">
+                        <i class="fas fa-image mr-2"></i>Convert to GIF
+                    </button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="progress-section" class="hidden space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span id="progress-status">Converting...</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div id="progress-bar" class="bg-indian-saffron h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Output Preview -->
+                <div id="output-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Generated GIF</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <img id="gif-preview" class="w-full rounded-lg" alt="Generated GIF">
+                        <div class="flex justify-between mt-4">
+                            <div id="gif-info" class="text-sm text-gray-500"></div>
+                            <button id="download-gif" class="tool-btn">
+                                <i class="fas fa-download mr-1"></i>Download GIF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tool-btn {
+            @apply text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const clearFileBtn = document.getElementById('clear-file');
+            const previewSection = document.getElementById('preview-section');
+            const optionsSection = document.getElementById('options-section');
+            const convertBtn = document.getElementById('convert-btn');
+            const progressSection = document.getElementById('progress-section');
+            const outputSection = document.getElementById('output-section');
+            const videoPreview = document.getElementById('video-preview');
+            const fileName = document.getElementById('file-name');
+            const fileInfo = document.getElementById('file-info');
+            const sizeOption = document.getElementById('size-option');
+            const customSize = document.getElementById('custom-size');
+            const trimVideo = document.getElementById('trim-video');
+            const trimControls = document.getElementById('trim-controls');
+
+            let currentFile = null;
+
+            // File upload handling
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            function handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('video/')) {
+                    alert('Please upload a valid video file.');
+                    return;
+                }
+
+                currentFile = file;
+                updateVideoPreview();
+            }
+
+            // Update video preview
+            function updateVideoPreview() {
+                if (!currentFile) return;
+
+                const videoURL = URL.createObjectURL(currentFile);
+                videoPreview.src = videoURL;
+                fileName.textContent = currentFile.name;
+
+                videoPreview.onloadedmetadata = function() {
+                    const duration = Math.round(videoPreview.duration);
+                    const minutes = Math.floor(duration / 60);
+                    const seconds = duration % 60;
+                    fileInfo.textContent = `${formatFileSize(currentFile.size)} • ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                };
+
+                // Show sections
+                previewSection.classList.remove('hidden');
+                optionsSection.classList.remove('hidden');
+                convertBtn.classList.remove('hidden');
+                clearFileBtn.classList.remove('hidden');
+                outputSection.classList.add('hidden');
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Size option handling
+            sizeOption.addEventListener('change', () => {
+                customSize.classList.toggle('hidden', sizeOption.value !== 'custom');
+            });
+
+            // Trim option handling
+            trimVideo.addEventListener('change', () => {
+                trimControls.classList.toggle('hidden', !trimVideo.checked);
+            });
+
+            // Clear file
+            clearFileBtn.addEventListener('click', () => {
+                currentFile = null;
+                fileInput.value = '';
+                videoPreview.src = '';
+                previewSection.classList.add('hidden');
+                optionsSection.classList.add('hidden');
+                convertBtn.classList.add('hidden');
+                clearFileBtn.classList.add('hidden');
+                outputSection.classList.add('hidden');
+                progressSection.classList.add('hidden');
+            });
+
+            // Convert to GIF
+            convertBtn.addEventListener('click', async () => {
+                if (!currentFile) {
+                    alert('Please upload a video file.');
+                    return;
+                }
+
+                // Show progress
+                progressSection.classList.remove('hidden');
+                convertBtn.disabled = true;
+                convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Converting...';
+
+                // Simulate conversion process
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 2;
+                    document.getElementById('progress-bar').style.width = `${progress}%`;
+                    document.getElementById('progress-text').textContent = `${progress}%`;
+
+                    if (progress < 30) {
+                        document.getElementById('progress-status').textContent = 'Processing video...';
+                    } else if (progress < 60) {
+                        document.getElementById('progress-status').textContent = 'Extracting frames...';
+                    } else if (progress < 90) {
+                        document.getElementById('progress-status').textContent = 'Generating GIF...';
+                    } else {
+                        document.getElementById('progress-status').textContent = 'Finalizing...';
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Show output section with a placeholder GIF
+                        outputSection.classList.remove('hidden');
+                        document.getElementById('gif-preview').src = videoPreview.src; // Using video thumbnail as placeholder
+                        document.getElementById('gif-info').textContent = 'Generated GIF • ' + formatFileSize(currentFile.size / 2);
+
+                        // Reset progress
+                        progressSection.classList.add('hidden');
+                        convertBtn.disabled = false;
+                        convertBtn.innerHTML = '<i class="fas fa-image mr-2"></i>Convert to GIF';
+                        document.getElementById('progress-bar').style.width = '0%';
+                        document.getElementById('progress-text').textContent = '0%';
+                        document.getElementById('progress-status').textContent = 'Converting...';
+                    }
+                }, 100);
+            });
+
+            // Download GIF
+            document.getElementById('download-gif').addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.href = document.getElementById('gif-preview').src;
+                link.download = currentFile.name.replace(/\.[^/.]+$/, '.gif');
+                link.click();
+            });
+
+            // Drag and drop handling
+            const dropZone = document.querySelector('.border-dashed');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropZone.classList.add('border-indian-saffron');
+            }
+
+            function unhighlight(e) {
+                dropZone.classList.remove('border-indian-saffron');
+            }
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelect({target: {files: files}});
+            }
+        });
+    </script>
+</body>
+</html>

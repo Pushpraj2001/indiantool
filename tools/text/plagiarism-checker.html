@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plagiarism Checker - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Plagiarism Checker</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex space-x-4">
+                        <button id="paste-text" class="btn-primary px-4 py-2 rounded-lg bg-indian-saffron text-white hover:bg-indian-saffron/90">
+                            <i class="fas fa-paste mr-2"></i>Paste Text
+                        </button>
+                        <button id="clear-text" class="btn-secondary px-4 py-2 rounded-lg bg-gray-500 text-white hover:bg-gray-600">
+                            <i class="fas fa-trash-alt mr-2"></i>Clear
+                        </button>
+                    </div>
+                    <button id="check-plagiarism" class="btn-primary px-6 py-2 rounded-lg bg-indian-saffron text-white hover:bg-indian-saffron/90">
+                        <i class="fas fa-search mr-2"></i>Check Plagiarism
+                    </button>
+                </div>
+
+                <textarea id="input-text" 
+                    class="w-full h-64 p-4 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                    placeholder="Enter your text here to check for plagiarism..."></textarea>
+                
+                <!-- Results Section -->
+                <div id="results-section" class="hidden">
+                    <h2 class="text-xl font-semibold mb-4">Results</h2>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-lg font-semibold">Plagiarism Score</div>
+                            <div id="plagiarism-score" class="text-2xl font-bold text-indian-saffron">0%</div>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="progress-bar bg-gray-200 rounded-full h-4">
+                                <div id="score-bar" class="bg-indian-saffron h-4 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <div id="matches-list" class="space-y-2">
+                                <!-- Matches will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('input-text');
+            const checkBtn = document.getElementById('check-plagiarism');
+            const pasteBtn = document.getElementById('paste-text');
+            const clearBtn = document.getElementById('clear-text');
+            const resultsSection = document.getElementById('results-section');
+            const scoreElement = document.getElementById('plagiarism-score');
+            const scoreBar = document.getElementById('score-bar');
+            const matchesList = document.getElementById('matches-list');
+
+            // Paste functionality
+            pasteBtn.addEventListener('click', async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    textarea.value = text;
+                } catch (err) {
+                    console.error('Failed to read clipboard:', err);
+                }
+            });
+
+            // Clear functionality
+            clearBtn.addEventListener('click', () => {
+                textarea.value = '';
+                resultsSection.classList.add('hidden');
+            });
+
+            // Check plagiarism functionality
+            checkBtn.addEventListener('click', async () => {
+                const text = textarea.value.trim();
+                if (!text) {
+                    alert('Please enter some text to check for plagiarism.');
+                    return;
+                }
+
+                // Show loading state
+                checkBtn.disabled = true;
+                checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Checking...';
+
+                // Simulate plagiarism check (replace with actual API call)
+                setTimeout(() => {
+                    // Demo results
+                    const score = Math.floor(Math.random() * 30); // Random score between 0-30%
+                    const matches = [
+                        { source: 'example.com', similarity: '15%', text: 'Similar content found...' },
+                        { source: 'another-site.com', similarity: '10%', text: 'Matching text found...' }
+                    ];
+
+                    // Update UI
+                    scoreElement.textContent = score + '%';
+                    scoreBar.style.width = score + '%';
+                    
+                    // Update matches list
+                    matchesList.innerHTML = matches.map(match => `
+                        <div class="border-b dark:border-gray-700 py-2">
+                            <div class="flex justify-between text-sm">
+                                <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">${match.source}</a>
+                                <span class="text-indian-saffron">${match.similarity} similar</span>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm mt-1">${match.text}</p>
+                        </div>
+                    `).join('');
+
+                    // Show results
+                    resultsSection.classList.remove('hidden');
+
+                    // Reset button
+                    checkBtn.disabled = false;
+                    checkBtn.innerHTML = '<i class="fas fa-search mr-2"></i>Check Plagiarism';
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>

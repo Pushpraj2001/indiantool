@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP4 to MP3 Converter - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">MP4 to MP3 Converter</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-8">
+                <!-- Upload Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Upload Video</h3>
+                        <button id="clear-file" class="tool-btn hidden">
+                            <i class="fas fa-trash-alt mr-1"></i>Clear
+                        </button>
+                    </div>
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8">
+                        <div class="text-center">
+                            <input type="file" id="file-input" accept="video/mp4" class="hidden">
+                            <label for="file-input" class="cursor-pointer">
+                                <div class="space-y-4">
+                                    <i class="fas fa-file-video text-4xl text-gray-400"></i>
+                                    <div class="text-lg">
+                                        Drag & drop MP4 video here or <span class="text-indian-saffron">browse</span>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        Maximum file size: 500MB
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Info -->
+                <div id="file-info-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Video Information</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+                        <div class="flex items-center space-x-4">
+                            <i class="fas fa-file-video text-2xl text-indian-saffron"></i>
+                            <div>
+                                <div id="file-name" class="font-medium"></div>
+                                <div id="file-info" class="text-sm text-gray-500"></div>
+                            </div>
+                        </div>
+                        <!-- Audio Preview -->
+                        <div class="mt-4">
+                            <video id="video-preview" class="w-full rounded-lg" controls>
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversion Options -->
+                <div id="options-section" class="hidden space-y-6">
+                    <h3 class="text-lg font-semibold">Audio Options</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Audio Quality -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Audio Quality</label>
+                            <select id="quality-option" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="320">High Quality (320 kbps)</option>
+                                <option value="256">Good Quality (256 kbps)</option>
+                                <option value="192" selected>Standard Quality (192 kbps)</option>
+                                <option value="128">Low Quality (128 kbps)</option>
+                            </select>
+                        </div>
+
+                        <!-- Audio Format -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Output Format</label>
+                            <select id="format-option" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="mp3">MP3</option>
+                                <option value="m4a">M4A (AAC)</option>
+                                <option value="wav">WAV (Lossless)</option>
+                            </select>
+                        </div>
+
+                        <!-- Channel -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Audio Channels</label>
+                            <select id="channel-option" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="stereo">Stereo</option>
+                                <option value="mono">Mono</option>
+                            </select>
+                        </div>
+
+                        <!-- Sample Rate -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Sample Rate</label>
+                            <select id="sample-rate" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="44100">44.1 kHz (CD Quality)</option>
+                                <option value="48000">48 kHz (DVD Quality)</option>
+                                <option value="32000">32 kHz (Lower Quality)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Trim Options -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium">Trim Audio</h4>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" id="trim-audio" class="w-4 h-4 text-indian-saffron rounded">
+                                <span>Enable Trimming</span>
+                            </label>
+                        </div>
+                        <div id="trim-controls" class="hidden space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Start Time</label>
+                                    <input type="text" id="start-time" placeholder="00:00"
+                                        class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">End Time</label>
+                                    <input type="text" id="end-time" placeholder="00:00"
+                                        class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Metadata -->
+                    <div class="space-y-4">
+                        <h4 class="font-medium">Audio Metadata (Optional)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Title</label>
+                                <input type="text" id="meta-title" placeholder="Song title"
+                                    class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Artist</label>
+                                <input type="text" id="meta-artist" placeholder="Artist name"
+                                    class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Convert Button -->
+                <div class="text-center">
+                    <button id="convert-btn" class="px-8 py-3 bg-indian-saffron text-white rounded-lg hover:bg-indian-saffron/90 hidden">
+                        <i class="fas fa-music mr-2"></i>Convert to MP3
+                    </button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="progress-section" class="hidden space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span id="progress-status">Converting...</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div id="progress-bar" class="bg-indian-saffron h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Output Preview -->
+                <div id="output-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Converted Audio</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-music text-2xl text-indian-saffron"></i>
+                                <div>
+                                    <div id="output-name" class="font-medium"></div>
+                                    <div id="output-info" class="text-sm text-gray-500"></div>
+                                </div>
+                            </div>
+                            <button id="download-audio" class="tool-btn">
+                                <i class="fas fa-download mr-1"></i>Download
+                            </button>
+                        </div>
+                        <audio id="audio-preview" class="w-full mt-4" controls>
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tool-btn {
+            @apply text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const clearFileBtn = document.getElementById('clear-file');
+            const fileInfoSection = document.getElementById('file-info-section');
+            const optionsSection = document.getElementById('options-section');
+            const convertBtn = document.getElementById('convert-btn');
+            const progressSection = document.getElementById('progress-section');
+            const outputSection = document.getElementById('output-section');
+            const videoPreview = document.getElementById('video-preview');
+            const fileName = document.getElementById('file-name');
+            const fileInfo = document.getElementById('file-info');
+            const trimAudio = document.getElementById('trim-audio');
+            const trimControls = document.getElementById('trim-controls');
+
+            let currentFile = null;
+
+            // File upload handling
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            function handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (file.type !== 'video/mp4') {
+                    alert('Please upload an MP4 video file.');
+                    return;
+                }
+
+                if (file.size > 500 * 1024 * 1024) { // 500MB limit
+                    alert('File size exceeds 500MB limit.');
+                    return;
+                }
+
+                currentFile = file;
+                updateFilePreview();
+            }
+
+            // Update file preview
+            function updateFilePreview() {
+                if (!currentFile) return;
+
+                const videoURL = URL.createObjectURL(currentFile);
+                videoPreview.src = videoURL;
+                fileName.textContent = currentFile.name;
+
+                videoPreview.onloadedmetadata = function() {
+                    const duration = Math.round(videoPreview.duration);
+                    const minutes = Math.floor(duration / 60);
+                    const seconds = duration % 60;
+                    fileInfo.textContent = `${formatFileSize(currentFile.size)} • ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                };
+
+                // Show sections
+                fileInfoSection.classList.remove('hidden');
+                optionsSection.classList.remove('hidden');
+                convertBtn.classList.remove('hidden');
+                clearFileBtn.classList.remove('hidden');
+                outputSection.classList.add('hidden');
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Trim option handling
+            trimAudio.addEventListener('change', () => {
+                trimControls.classList.toggle('hidden', !trimAudio.checked);
+            });
+
+            // Clear file
+            clearFileBtn.addEventListener('click', () => {
+                currentFile = null;
+                fileInput.value = '';
+                videoPreview.src = '';
+                fileInfoSection.classList.add('hidden');
+                optionsSection.classList.add('hidden');
+                convertBtn.classList.add('hidden');
+                clearFileBtn.classList.add('hidden');
+                outputSection.classList.add('hidden');
+                progressSection.classList.add('hidden');
+            });
+
+            // Convert to MP3
+            convertBtn.addEventListener('click', async () => {
+                if (!currentFile) {
+                    alert('Please upload an MP4 video file.');
+                    return;
+                }
+
+                // Show progress
+                progressSection.classList.remove('hidden');
+                convertBtn.disabled = true;
+                convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Converting...';
+
+                // Simulate conversion process
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 2;
+                    document.getElementById('progress-bar').style.width = `${progress}%`;
+                    document.getElementById('progress-text').textContent = `${progress}%`;
+
+                    if (progress < 30) {
+                        document.getElementById('progress-status').textContent = 'Extracting audio...';
+                    } else if (progress < 60) {
+                        document.getElementById('progress-status').textContent = 'Converting format...';
+                    } else if (progress < 90) {
+                        document.getElementById('progress-status').textContent = 'Applying settings...';
+                    } else {
+                        document.getElementById('progress-status').textContent = 'Finalizing...';
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Show output section
+                        outputSection.classList.remove('hidden');
+                        document.getElementById('output-name').textContent = 
+                            currentFile.name.replace('.mp4', '.' + document.getElementById('format-option').value);
+                        document.getElementById('output-info').textContent = 
+                            `${document.getElementById('quality-option').value} kbps • ${document.getElementById('channel-option').value}`;
+                        
+                        // Set audio preview source to video's audio track
+                        document.getElementById('audio-preview').src = videoPreview.src;
+
+                        // Reset progress
+                        progressSection.classList.add('hidden');
+                        convertBtn.disabled = false;
+                        convertBtn.innerHTML = '<i class="fas fa-music mr-2"></i>Convert to MP3';
+                        document.getElementById('progress-bar').style.width = '0%';
+                        document.getElementById('progress-text').textContent = '0%';
+                        document.getElementById('progress-status').textContent = 'Converting...';
+                    }
+                }, 100);
+            });
+
+            // Download audio
+            document.getElementById('download-audio').addEventListener('click', () => {
+                const format = document.getElementById('format-option').value;
+                const link = document.createElement('a');
+                link.href = document.getElementById('audio-preview').src;
+                link.download = currentFile.name.replace('.mp4', '.' + format);
+                link.click();
+            });
+
+            // Drag and drop handling
+            const dropZone = document.querySelector('.border-dashed');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropZone.classList.add('border-indian-saffron');
+            }
+
+            function unhighlight(e) {
+                dropZone.classList.remove('border-indian-saffron');
+            }
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelect({target: {files: files}});
+            }
+        });
+    </script>
+</body>
+</html>

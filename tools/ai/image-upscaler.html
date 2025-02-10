@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Upscaler - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">AI Image Upscaler</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-8">
+                <!-- Upload Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Upload Image</h3>
+                        <button id="clear-file" class="tool-btn hidden">
+                            <i class="fas fa-trash-alt mr-1"></i>Clear
+                        </button>
+                    </div>
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8">
+                        <div class="text-center">
+                            <input type="file" id="file-input" accept="image/*" class="hidden">
+                            <label for="file-input" class="cursor-pointer">
+                                <div class="space-y-4">
+                                    <i class="fas fa-image text-4xl text-gray-400"></i>
+                                    <div class="text-lg">
+                                        Drag & drop image here or <span class="text-indian-saffron">browse</span>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        Supported formats: JPG, PNG, WebP (Max: 5MB)
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Preview -->
+                <div id="preview-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Original Image</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <div id="image-info" class="flex items-center space-x-4 mb-4">
+                            <i class="fas fa-image text-2xl text-indian-saffron"></i>
+                            <div>
+                                <div id="file-name" class="font-medium"></div>
+                                <div id="file-info" class="text-sm text-gray-500"></div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <img id="image-preview" class="w-full rounded-lg" alt="Original image">
+                            <div class="absolute top-2 right-2">
+                                <button id="zoom-btn" class="bg-black/50 text-white p-2 rounded-lg hover:bg-black/70">
+                                    <i class="fas fa-search-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upscale Options -->
+                <div id="options-section" class="hidden space-y-6">
+                    <h3 class="text-lg font-semibold">Upscale Options</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Scale Factor -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Scale Factor</label>
+                            <select id="scale-factor" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="2">2x (Good for small images)</option>
+                                <option value="4">4x (Recommended)</option>
+                                <option value="8">8x (Best quality, slower)</option>
+                            </select>
+                        </div>
+
+                        <!-- AI Model -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">AI Model</label>
+                            <select id="ai-model" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="standard">Standard (Fast)</option>
+                                <option value="photo">Photo-Realistic</option>
+                                <option value="art">Artistic Enhancement</option>
+                                <option value="anime">Anime/Manga Style</option>
+                            </select>
+                        </div>
+
+                        <!-- Face Enhancement -->
+                        <div>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" id="face-enhancement" checked
+                                    class="w-4 h-4 text-indian-saffron rounded">
+                                <span>Face Enhancement</span>
+                            </label>
+                            <p class="text-sm text-gray-500 mt-1">
+                                Improve facial details and features
+                            </p>
+                        </div>
+
+                        <!-- Noise Reduction -->
+                        <div>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" id="noise-reduction" checked
+                                    class="w-4 h-4 text-indian-saffron rounded">
+                                <span>Noise Reduction</span>
+                            </label>
+                            <p class="text-sm text-gray-500 mt-1">
+                                Remove image noise and grain
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Options -->
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium">Advanced Options</h4>
+                            <button id="toggle-advanced" class="text-sm text-indian-saffron">
+                                Show Advanced
+                            </button>
+                        </div>
+                        <div id="advanced-options" class="hidden space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Sharpness -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Sharpness</label>
+                                    <input type="range" id="sharpness" min="0" max="100" value="50"
+                                        class="w-full">
+                                    <div class="flex justify-between text-sm text-gray-500">
+                                        <span>Soft</span>
+                                        <span>Sharp</span>
+                                    </div>
+                                </div>
+
+                                <!-- Color Enhancement -->
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">Color Enhancement</label>
+                                    <input type="range" id="color-enhancement" min="0" max="100" value="50"
+                                        class="w-full">
+                                    <div class="flex justify-between text-sm text-gray-500">
+                                        <span>Natural</span>
+                                        <span>Vibrant</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upscale Button -->
+                <div class="text-center">
+                    <button id="upscale-btn" class="px-8 py-3 bg-indian-saffron text-white rounded-lg hover:bg-indian-saffron/90 hidden">
+                        <i class="fas fa-wand-magic-sparkles mr-2"></i>Upscale Image
+                    </button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="progress-section" class="hidden space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span id="progress-status">Processing...</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div id="progress-bar" class="bg-indian-saffron h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Result Preview -->
+                <div id="result-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Upscaled Result</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-image text-2xl text-indian-saffron"></i>
+                                <div id="result-info" class="text-sm text-gray-500"></div>
+                            </div>
+                            <div class="space-x-2">
+                                <button id="download-btn" class="tool-btn">
+                                    <i class="fas fa-download mr-1"></i>Download
+                                </button>
+                                <button id="compare-btn" class="tool-btn">
+                                    <i class="fas fa-code-compare mr-1"></i>Compare
+                                </button>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <img id="result-preview" class="w-full rounded-lg" alt="Upscaled image">
+                            <div class="absolute top-2 right-2">
+                                <button id="zoom-result-btn" class="bg-black/50 text-white p-2 rounded-lg hover:bg-black/70">
+                                    <i class="fas fa-search-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Comparison Modal -->
+    <div id="comparison-modal" class="fixed inset-0 bg-black/50 hidden backdrop-blur-sm">
+        <div class="container mx-auto px-4 h-full flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-6xl w-full">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold">Before & After Comparison</h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="text-center mb-2">Original</h4>
+                        <img id="compare-original" class="w-full rounded-lg" alt="Original image">
+                    </div>
+                    <div>
+                        <h4 class="text-center mb-2">Upscaled</h4>
+                        <img id="compare-result" class="w-full rounded-lg" alt="Upscaled image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tool-btn {
+            @apply text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600;
+        }
+        input[type="range"] {
+            @apply h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            @apply appearance-none w-4 h-4 bg-indian-saffron rounded-full cursor-pointer;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const clearFileBtn = document.getElementById('clear-file');
+            const previewSection = document.getElementById('preview-section');
+            const optionsSection = document.getElementById('options-section');
+            const upscaleBtn = document.getElementById('upscale-btn');
+            const progressSection = document.getElementById('progress-section');
+            const resultSection = document.getElementById('result-section');
+            const imagePreview = document.getElementById('image-preview');
+            const fileName = document.getElementById('file-name');
+            const fileInfo = document.getElementById('file-info');
+            const toggleAdvanced = document.getElementById('toggle-advanced');
+            const advancedOptions = document.getElementById('advanced-options');
+            const comparisonModal = document.getElementById('comparison-modal');
+
+            let currentFile = null;
+
+            // File upload handling
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            function handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('image/')) {
+                    alert('Please upload an image file.');
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    alert('File size exceeds 5MB limit.');
+                    return;
+                }
+
+                currentFile = file;
+                updateImagePreview();
+            }
+
+            // Update image preview
+            function updateImagePreview() {
+                if (!currentFile) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    fileName.textContent = currentFile.name;
+                    
+                    // Load image to get dimensions
+                    const img = new Image();
+                    img.onload = function() {
+                        fileInfo.textContent = `${img.width} × ${img.height}px • ${formatFileSize(currentFile.size)}`;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(currentFile);
+
+                // Show sections
+                previewSection.classList.remove('hidden');
+                optionsSection.classList.remove('hidden');
+                upscaleBtn.classList.remove('hidden');
+                clearFileBtn.classList.remove('hidden');
+                resultSection.classList.add('hidden');
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Toggle advanced options
+            toggleAdvanced.addEventListener('click', () => {
+                const isHidden = advancedOptions.classList.contains('hidden');
+                advancedOptions.classList.toggle('hidden');
+                toggleAdvanced.textContent = isHidden ? 'Hide Advanced' : 'Show Advanced';
+            });
+
+            // Clear file
+            clearFileBtn.addEventListener('click', () => {
+                currentFile = null;
+                fileInput.value = '';
+                previewSection.classList.add('hidden');
+                optionsSection.classList.add('hidden');
+                upscaleBtn.classList.add('hidden');
+                clearFileBtn.classList.add('hidden');
+                resultSection.classList.add('hidden');
+                progressSection.classList.add('hidden');
+            });
+
+            // Upscale image
+            upscaleBtn.addEventListener('click', async () => {
+                if (!currentFile) {
+                    alert('Please upload an image.');
+                    return;
+                }
+
+                // Show progress
+                progressSection.classList.remove('hidden');
+                upscaleBtn.disabled = true;
+                upscaleBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+
+                // Simulate upscaling process
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 2;
+                    document.getElementById('progress-bar').style.width = `${progress}%`;
+                    document.getElementById('progress-text').textContent = `${progress}%`;
+
+                    if (progress < 30) {
+                        document.getElementById('progress-status').textContent = 'Analyzing image...';
+                    } else if (progress < 60) {
+                        document.getElementById('progress-status').textContent = 'Applying AI upscaling...';
+                    } else if (progress < 90) {
+                        document.getElementById('progress-status').textContent = 'Enhancing details...';
+                    } else {
+                        document.getElementById('progress-status').textContent = 'Finalizing...';
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Show result
+                        resultSection.classList.remove('hidden');
+                        document.getElementById('result-preview').src = imagePreview.src; // Using original as placeholder
+                        document.getElementById('result-info').textContent = 
+                            `Upscaled ${document.getElementById('scale-factor').value}x • AI Enhanced`;
+
+                        // Reset progress
+                        progressSection.classList.add('hidden');
+                        upscaleBtn.disabled = false;
+                        upscaleBtn.innerHTML = '<i class="fas fa-wand-magic-sparkles mr-2"></i>Upscale Image';
+                        document.getElementById('progress-bar').style.width = '0%';
+                        document.getElementById('progress-text').textContent = '0%';
+                        document.getElementById('progress-status').textContent = 'Processing...';
+                    }
+                }, 100);
+            });
+
+            // Compare button
+            document.getElementById('compare-btn').addEventListener('click', () => {
+                document.getElementById('compare-original').src = imagePreview.src;
+                document.getElementById('compare-result').src = document.getElementById('result-preview').src;
+                comparisonModal.classList.remove('hidden');
+            });
+
+            // Close modal
+            document.getElementById('close-modal').addEventListener('click', () => {
+                comparisonModal.classList.add('hidden');
+            });
+
+            // Download result
+            document.getElementById('download-btn').addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.href = document.getElementById('result-preview').src;
+                link.download = 'upscaled_' + currentFile.name;
+                link.click();
+            });
+
+            // Drag and drop handling
+            const dropZone = document.querySelector('.border-dashed');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropZone.classList.add('border-indian-saffron');
+            }
+
+            function unhighlight(e) {
+                dropZone.classList.remove('border-indian-saffron');
+            }
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelect({target: {files: files}});
+            }
+        });
+    </script>
+</body>
+</html>

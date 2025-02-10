@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder/Decoder - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Base64 Encoder/Decoder</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-6">
+                <!-- Mode Selection -->
+                <div class="flex justify-center space-x-4 mb-6">
+                    <button id="encode-mode" class="mode-btn active">
+                        <i class="fas fa-lock mr-2"></i>Encode
+                    </button>
+                    <button id="decode-mode" class="mode-btn">
+                        <i class="fas fa-lock-open mr-2"></i>Decode
+                    </button>
+                </div>
+
+                <!-- Input Section -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 id="input-label" class="text-lg font-semibold">Text to Encode</h3>
+                        <div class="flex space-x-2">
+                            <button id="paste-text" class="tool-btn">
+                                <i class="fas fa-paste mr-1"></i>Paste
+                            </button>
+                            <button id="clear-text" class="tool-btn">
+                                <i class="fas fa-trash-alt mr-1"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="input-text" 
+                        class="w-full h-48 p-4 font-mono text-sm rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                        placeholder="Enter text to encode..."></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-center">
+                    <button id="convert-btn" class="px-8 py-3 bg-indian-saffron text-white rounded-lg hover:bg-indian-saffron/90">
+                        <i class="fas fa-exchange-alt mr-2"></i>Convert
+                    </button>
+                </div>
+
+                <!-- Output Section -->
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 id="output-label" class="text-lg font-semibold">Encoded Result</h3>
+                        <button id="copy-result" class="tool-btn">
+                            <i class="fas fa-copy mr-1"></i>Copy
+                        </button>
+                    </div>
+                    <div id="output-text" 
+                        class="w-full h-48 p-4 font-mono text-sm rounded-lg border bg-white dark:bg-gray-800 overflow-y-auto whitespace-pre-wrap break-all">
+                        <div class="text-gray-500 dark:text-gray-400 text-center mt-4">
+                            Converted text will appear here...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Handling -->
+                <div class="border-t pt-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4">File Conversion</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex-1">
+                            <input type="file" id="file-input" class="hidden">
+                            <label for="file-input" class="block w-full px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 text-center">
+                                <i class="fas fa-file-upload mr-2"></i>Select File
+                            </label>
+                        </div>
+                        <button id="download-btn" class="flex-1 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i class="fas fa-download mr-2"></i>Download Result
+                        </button>
+                    </div>
+                    <p id="file-info" class="text-sm text-gray-600 dark:text-gray-400 mt-2"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .mode-btn {
+            @apply px-6 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors;
+        }
+        .mode-btn.active {
+            @apply bg-indian-saffron text-white hover:bg-indian-saffron/90;
+        }
+        .tool-btn {
+            @apply text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const encodeMode = document.getElementById('encode-mode');
+            const decodeMode = document.getElementById('decode-mode');
+            const inputText = document.getElementById('input-text');
+            const outputText = document.getElementById('output-text');
+            const convertBtn = document.getElementById('convert-btn');
+            const pasteBtn = document.getElementById('paste-text');
+            const clearBtn = document.getElementById('clear-text');
+            const copyBtn = document.getElementById('copy-result');
+            const fileInput = document.getElementById('file-input');
+            const downloadBtn = document.getElementById('download-btn');
+            const fileInfo = document.getElementById('file-info');
+            const inputLabel = document.getElementById('input-label');
+            const outputLabel = document.getElementById('output-label');
+
+            let isEncodeMode = true;
+
+            // Mode switching
+            function updateMode(encode) {
+                isEncodeMode = encode;
+                encodeMode.classList.toggle('active', encode);
+                decodeMode.classList.toggle('active', !encode);
+                inputLabel.textContent = encode ? 'Text to Encode' : 'Base64 to Decode';
+                outputLabel.textContent = encode ? 'Encoded Result' : 'Decoded Result';
+                inputText.placeholder = encode ? 'Enter text to encode...' : 'Enter base64 to decode...';
+                clearOutput();
+            }
+
+            encodeMode.addEventListener('click', () => updateMode(true));
+            decodeMode.addEventListener('click', () => updateMode(false));
+
+            // Convert functionality
+            function convertText() {
+                const input = inputText.value.trim();
+                if (!input) {
+                    alert('Please enter text to convert.');
+                    return;
+                }
+
+                try {
+                    let result;
+                    if (isEncodeMode) {
+                        result = btoa(unescape(encodeURIComponent(input)));
+                    } else {
+                        result = decodeURIComponent(escape(atob(input)));
+                    }
+                    outputText.innerHTML = `<div class="text-gray-800 dark:text-gray-200">${result}</div>`;
+                    downloadBtn.disabled = false;
+                } catch (error) {
+                    outputText.innerHTML = `<div class="text-red-500">Error: Invalid ${isEncodeMode ? 'text' : 'base64'} input</div>`;
+                    downloadBtn.disabled = true;
+                }
+            }
+
+            convertBtn.addEventListener('click', convertText);
+
+            // Clear functionality
+            function clearOutput() {
+                outputText.innerHTML = `
+                    <div class="text-gray-500 dark:text-gray-400 text-center mt-4">
+                        Converted text will appear here...
+                    </div>
+                `;
+                downloadBtn.disabled = true;
+            }
+
+            clearBtn.addEventListener('click', () => {
+                inputText.value = '';
+                clearOutput();
+            });
+
+            // Paste functionality
+            pasteBtn.addEventListener('click', async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    inputText.value = text;
+                } catch (err) {
+                    console.error('Failed to read clipboard:', err);
+                }
+            });
+
+            // Copy functionality
+            copyBtn.addEventListener('click', () => {
+                const text = outputText.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+
+            // File handling
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    fileInfo.textContent = `Selected file: ${file.name}`;
+                    const reader = new FileReader();
+                    
+                    if (isEncodeMode) {
+                        reader.readAsDataURL(file);
+                        reader.onload = () => {
+                            const base64 = reader.result.split(',')[1];
+                            inputText.value = base64;
+                            convertText();
+                        };
+                    } else {
+                        reader.readAsText(file);
+                        reader.onload = () => {
+                            inputText.value = reader.result;
+                            convertText();
+                        };
+                    }
+                }
+            });
+
+            // Download functionality
+            downloadBtn.addEventListener('click', () => {
+                const content = outputText.textContent;
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${isEncodeMode ? 'encoded' : 'decoded'}_result.txt`;
+                link.click();
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+</body>
+</html>

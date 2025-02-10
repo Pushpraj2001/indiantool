@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar Checker - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Grammar & Spell Checker</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex space-x-4">
+                        <button id="paste-text" class="btn-primary px-4 py-2 rounded-lg bg-indian-saffron text-white hover:bg-indian-saffron/90">
+                            <i class="fas fa-paste mr-2"></i>Paste Text
+                        </button>
+                        <button id="clear-text" class="btn-secondary px-4 py-2 rounded-lg bg-gray-500 text-white hover:bg-gray-600">
+                            <i class="fas fa-trash-alt mr-2"></i>Clear
+                        </button>
+                    </div>
+                    <button id="check-grammar" class="btn-primary px-6 py-2 rounded-lg bg-indian-saffron text-white hover:bg-indian-saffron/90">
+                        <i class="fas fa-check mr-2"></i>Check Grammar
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Input Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Your Text</h3>
+                        <textarea id="input-text" 
+                            class="w-full h-96 p-4 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                            placeholder="Enter your text here to check grammar and spelling..."></textarea>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Suggestions</h3>
+                        <div id="results-section" class="h-96 overflow-y-auto bg-white dark:bg-gray-800 rounded-lg p-4">
+                            <div id="suggestions-list" class="space-y-4">
+                                <!-- Suggestions will be inserted here -->
+                                <div class="text-gray-500 dark:text-gray-400 text-center mt-4">
+                                    Enter text and click "Check Grammar" to see suggestions
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                    <div class="stat-box">
+                        <h3>Grammar Issues</h3>
+                        <p id="grammar-count">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Spelling Errors</h3>
+                        <p id="spelling-count">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Style Suggestions</h3>
+                        <p id="style-count">0</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>Score</h3>
+                        <p id="writing-score">100</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('input-text');
+            const checkBtn = document.getElementById('check-grammar');
+            const pasteBtn = document.getElementById('paste-text');
+            const clearBtn = document.getElementById('clear-text');
+            const suggestionsList = document.getElementById('suggestions-list');
+            const grammarCount = document.getElementById('grammar-count');
+            const spellingCount = document.getElementById('spelling-count');
+            const styleCount = document.getElementById('style-count');
+            const writingScore = document.getElementById('writing-score');
+
+            // Paste functionality
+            pasteBtn.addEventListener('click', async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    textarea.value = text;
+                } catch (err) {
+                    console.error('Failed to read clipboard:', err);
+                }
+            });
+
+            // Clear functionality
+            clearBtn.addEventListener('click', () => {
+                textarea.value = '';
+                resetStats();
+                suggestionsList.innerHTML = `
+                    <div class="text-gray-500 dark:text-gray-400 text-center mt-4">
+                        Enter text and click "Check Grammar" to see suggestions
+                    </div>
+                `;
+            });
+
+            function resetStats() {
+                grammarCount.textContent = '0';
+                spellingCount.textContent = '0';
+                styleCount.textContent = '0';
+                writingScore.textContent = '100';
+            }
+
+            // Check grammar functionality
+            checkBtn.addEventListener('click', () => {
+                const text = textarea.value.trim();
+                if (!text) {
+                    alert('Please enter some text to check.');
+                    return;
+                }
+
+                // Show loading state
+                checkBtn.disabled = true;
+                checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Checking...';
+
+                // Simulate grammar check (replace with actual API call)
+                setTimeout(() => {
+                    // Demo results
+                    const suggestions = [
+                        {
+                            type: 'grammar',
+                            text: 'Consider revising this sentence structure',
+                            suggestion: 'Suggested correction: ...',
+                            severity: 'medium'
+                        },
+                        {
+                            type: 'spelling',
+                            text: 'Possible spelling mistake',
+                            suggestion: 'Did you mean: ...',
+                            severity: 'high'
+                        },
+                        {
+                            type: 'style',
+                            text: 'Consider using a more precise word',
+                            suggestion: 'Alternative: ...',
+                            severity: 'low'
+                        }
+                    ];
+
+                    // Update statistics
+                    const stats = {
+                        grammar: Math.floor(Math.random() * 5),
+                        spelling: Math.floor(Math.random() * 3),
+                        style: Math.floor(Math.random() * 4)
+                    };
+
+                    grammarCount.textContent = stats.grammar;
+                    spellingCount.textContent = stats.spelling;
+                    styleCount.textContent = stats.style;
+                    
+                    const totalIssues = stats.grammar + stats.spelling + stats.style;
+                    const score = Math.max(100 - (totalIssues * 5), 0);
+                    writingScore.textContent = score;
+
+                    // Update suggestions list
+                    suggestionsList.innerHTML = suggestions.map(suggestion => `
+                        <div class="suggestion-item border-b dark:border-gray-700 py-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-semibold ${
+                                    suggestion.type === 'grammar' ? 'text-red-500' :
+                                    suggestion.type === 'spelling' ? 'text-yellow-500' :
+                                    'text-blue-500'
+                                }">
+                                    <i class="fas ${
+                                        suggestion.type === 'grammar' ? 'fa-grammar' :
+                                        suggestion.type === 'spelling' ? 'fa-spell-check' :
+                                        'fa-feather'
+                                    } mr-2"></i>
+                                    ${suggestion.type.charAt(0).toUpperCase() + suggestion.type.slice(1)}
+                                </span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                    ${suggestion.severity} priority
+                                </span>
+                            </div>
+                            <p class="text-gray-700 dark:text-gray-300 mt-1">${suggestion.text}</p>
+                            <p class="text-indian-saffron text-sm mt-1">${suggestion.suggestion}</p>
+                        </div>
+                    `).join('');
+
+                    // Reset button
+                    checkBtn.disabled = false;
+                    checkBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Check Grammar';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

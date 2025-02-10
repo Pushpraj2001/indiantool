@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Changer - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Voice Changer</span>
+                </a>
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                    <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                    <i class="fas fa-sun text-yellow-400 hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-card p-8 rounded-xl">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold mb-4 dark:text-white">Voice Changer</h1>
+                    <p class="text-gray-600 dark:text-gray-300">Transform your voice with various effects</p>
+                </div>
+
+                <!-- Input Section -->
+                <div class="mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Recording Section -->
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold mb-4 dark:text-white">Record Voice</h3>
+                            <div class="flex flex-col items-center">
+                                <div class="recording-indicator mb-4">
+                                    <div id="waveform" class="h-16 w-64 flex items-center justify-center">
+                                        <div class="recording-wave hidden">
+                                            <div class="wave-bar"></div>
+                                            <div class="wave-bar"></div>
+                                            <div class="wave-bar"></div>
+                                            <div class="wave-bar"></div>
+                                            <div class="wave-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <button id="startRecordBtn" class="btn-primary px-6">
+                                        <i class="fas fa-microphone mr-2"></i> Record
+                                    </button>
+                                    <button id="stopRecordBtn" class="btn-secondary px-6 hidden">
+                                        <i class="fas fa-stop mr-2"></i> Stop
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Section -->
+                        <div class="glass-card p-6 rounded-xl">
+                            <h3 class="text-lg font-semibold mb-4 dark:text-white">Upload Audio</h3>
+                            <div class="upload-area border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center">
+                                <input type="file" id="audioInput" class="hidden" accept="audio/*">
+                                <label for="audioInput" class="cursor-pointer">
+                                    <div class="mb-4">
+                                        <i class="fas fa-cloud-upload-alt text-4xl text-indigo-500"></i>
+                                    </div>
+                                    <p class="text-gray-600 dark:text-gray-300">Click to upload or drag and drop</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">MP3, WAV, M4A files</p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Effects -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold mb-4 dark:text-white">Voice Effects</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <button class="effect-btn p-4 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-robot text-2xl mb-2 text-indigo-500"></i>
+                            <span class="block">Robot</span>
+                        </button>
+                        <button class="effect-btn p-4 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-child text-2xl mb-2 text-pink-500"></i>
+                            <span class="block">Chipmunk</span>
+                        </button>
+                        <button class="effect-btn p-4 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-ghost text-2xl mb-2 text-purple-500"></i>
+                            <span class="block">Echo</span>
+                        </button>
+                        <button class="effect-btn p-4 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-drum text-2xl mb-2 text-green-500"></i>
+                            <span class="block">Reverb</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Audio Controls -->
+                <div id="audioControls" class="mb-8 hidden">
+                    <div class="flex flex-col items-center">
+                        <audio id="audioPlayer" controls class="w-full mb-4"></audio>
+                        <div class="flex gap-4">
+                            <button id="playBtn" class="btn-primary px-6">
+                                <i class="fas fa-play mr-2"></i> Play
+                            </button>
+                            <button id="downloadBtn" class="btn-secondary px-6">
+                                <i class="fas fa-download mr-2"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Effect Controls -->
+                <div id="effectControls" class="hidden">
+                    <h3 class="text-lg font-semibold mb-4 dark:text-white">Effect Controls</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Pitch Control -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Pitch</label>
+                            <input type="range" id="pitchControl" min="0.5" max="2" step="0.1" value="1" 
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <!-- Speed Control -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Speed</label>
+                            <input type="range" id="speedControl" min="0.5" max="2" step="0.1" value="1"
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="loadingIndicator" class="hidden text-center p-4">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+                    <p class="text-gray-600 dark:text-gray-300">Processing audio...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .recording-wave {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            height: 20px;
+            background-color: #6366f1;
+            border-radius: 3px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { height: 20px; }
+            50% { height: 40px; }
+        }
+
+        /* Custom range input styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            background-image: linear-gradient(#6366f1, #6366f1);
+            background-repeat: no-repeat;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #6366f1;
+            cursor: pointer;
+            box-shadow: 0 0 2px 0 #555;
+            transition: background .3s ease-in-out;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #4f46e5;
+        }
+    </style>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const moonIcon = themeToggle.querySelector('.fa-moon');
+        const sunIcon = themeToggle.querySelector('.fa-sun');
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            moonIcon.classList.toggle('hidden');
+            sunIcon.classList.toggle('hidden');
+        });
+
+        // Audio Recording
+        let mediaRecorder;
+        let audioChunks = [];
+        const startRecordBtn = document.getElementById('startRecordBtn');
+        const stopRecordBtn = document.getElementById('stopRecordBtn');
+        const recordingWave = document.querySelector('.recording-wave');
+        const audioControls = document.getElementById('audioControls');
+        const effectControls = document.getElementById('effectControls');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        // Recording handlers
+        startRecordBtn.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayer.src = audioUrl;
+                    audioControls.classList.remove('hidden');
+                    effectControls.classList.remove('hidden');
+                };
+
+                mediaRecorder.start();
+                startRecordBtn.classList.add('hidden');
+                stopRecordBtn.classList.remove('hidden');
+                recordingWave.classList.remove('hidden');
+            } catch (err) {
+                console.error('Error accessing microphone:', err);
+                alert('Error accessing microphone. Please ensure microphone permissions are granted.');
+            }
+        });
+
+        stopRecordBtn.addEventListener('click', () => {
+            mediaRecorder.stop();
+            startRecordBtn.classList.remove('hidden');
+            stopRecordBtn.classList.add('hidden');
+            recordingWave.classList.add('hidden');
+        });
+
+        // File Upload Handler
+        const audioInput = document.getElementById('audioInput');
+        const uploadArea = document.querySelector('.upload-area');
+
+        audioInput.addEventListener('change', handleAudioUpload);
+
+        function handleAudioUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const audioUrl = URL.createObjectURL(file);
+                audioPlayer.src = audioUrl;
+                audioControls.classList.remove('hidden');
+                effectControls.classList.remove('hidden');
+            }
+        }
+
+        // Effect Buttons
+        const effectButtons = document.querySelectorAll('.effect-btn');
+        effectButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                loadingIndicator.classList.remove('hidden');
+                // Simulate effect processing
+                setTimeout(() => {
+                    loadingIndicator.classList.add('hidden');
+                    // Apply effect (replace with actual audio processing)
+                    console.log('Effect applied:', button.textContent.trim());
+                }, 1000);
+            });
+        });
+
+        // Audio Controls
+        const playBtn = document.getElementById('playBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        playBtn.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playBtn.innerHTML = '<i class="fas fa-pause mr-2"></i> Pause';
+            } else {
+                audioPlayer.pause();
+                playBtn.innerHTML = '<i class="fas fa-play mr-2"></i> Play';
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const audioUrl = audioPlayer.src;
+            const a = document.createElement('a');
+            a.href = audioUrl;
+            a.download = 'modified-voice.wav';
+            a.click();
+        });
+
+        // Effect Controls
+        const pitchControl = document.getElementById('pitchControl');
+        const speedControl = document.getElementById('speedControl');
+
+        function updateRangeBackground(input) {
+            const value = (input.value - input.min) / (input.max - input.min) * 100;
+            input.style.backgroundSize = `${value}% 100%`;
+        }
+
+        [pitchControl, speedControl].forEach(control => {
+            control.addEventListener('input', (e) => {
+                updateRangeBackground(e.target);
+                // Apply effect in real-time (replace with actual audio processing)
+                console.log(`${e.target.id}:`, e.target.value);
+            });
+        });
+
+        // Drag and Drop Handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            uploadArea.classList.add('border-indigo-500');
+        }
+
+        function unhighlight(e) {
+            uploadArea.classList.remove('border-indigo-500');
+        }
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            audioInput.files = files;
+            handleAudioUpload({ target: { files: files } });
+        }
+    </script>
+</body>
+</html>

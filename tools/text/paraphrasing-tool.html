@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paraphrasing Tool - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Paraphrasing Tool</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-6">
+                <!-- Style Selection -->
+                <div class="flex flex-wrap gap-4 justify-center mb-6">
+                    <button class="style-btn active" data-style="standard">
+                        <i class="fas fa-pen mr-2"></i>Standard
+                    </button>
+                    <button class="style-btn" data-style="formal">
+                        <i class="fas fa-user-tie mr-2"></i>Formal
+                    </button>
+                    <button class="style-btn" data-style="simple">
+                        <i class="fas fa-feather mr-2"></i>Simple
+                    </button>
+                    <button class="style-btn" data-style="creative">
+                        <i class="fas fa-paint-brush mr-2"></i>Creative
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Original Text -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-semibold">Original Text</h3>
+                            <div class="flex space-x-2">
+                                <button id="paste-text" class="text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
+                                    <i class="fas fa-paste mr-1"></i>Paste
+                                </button>
+                                <button id="clear-text" class="text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
+                                    <i class="fas fa-trash-alt mr-1"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                        <textarea id="input-text" 
+                            class="w-full h-64 p-4 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                            placeholder="Enter your text here to paraphrase..."></textarea>
+                    </div>
+
+                    <!-- Paraphrased Text -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-semibold">Paraphrased Text</h3>
+                            <button id="copy-result" class="text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <div id="output-text" 
+                            class="w-full h-64 p-4 rounded-lg border bg-white dark:bg-gray-800 overflow-y-auto">
+                            <div class="text-gray-500 dark:text-gray-400 text-center mt-4">
+                                Paraphrased text will appear here...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="text-center">
+                    <button id="paraphrase-btn" class="btn-primary px-8 py-3 rounded-lg bg-indian-saffron text-white hover:bg-indian-saffron/90">
+                        <i class="fas fa-sync-alt mr-2"></i>Paraphrase Text
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .style-btn {
+            @apply px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors;
+        }
+        .style-btn.active {
+            @apply bg-indian-saffron text-white hover:bg-indian-saffron/90;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const textarea = document.getElementById('input-text');
+            const outputDiv = document.getElementById('output-text');
+            const paraphraseBtn = document.getElementById('paraphrase-btn');
+            const pasteBtn = document.getElementById('paste-text');
+            const clearBtn = document.getElementById('clear-text');
+            const copyBtn = document.getElementById('copy-result');
+            const styleButtons = document.querySelectorAll('.style-btn');
+
+            // Style button functionality
+            styleButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    styleButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            // Paste functionality
+            pasteBtn.addEventListener('click', async () => {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    textarea.value = text;
+                } catch (err) {
+                    console.error('Failed to read clipboard:', err);
+                }
+            });
+
+            // Clear functionality
+            clearBtn.addEventListener('click', () => {
+                textarea.value = '';
+                outputDiv.innerHTML = `
+                    <div class="text-gray-500 dark:text-gray-400 text-center mt-4">
+                        Paraphrased text will appear here...
+                    </div>
+                `;
+            });
+
+            // Copy functionality
+            copyBtn.addEventListener('click', () => {
+                const text = outputDiv.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = copyBtn.innerHTML;
+                    copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = originalText;
+                    }, 2000);
+                });
+            });
+
+            // Paraphrase functionality
+            paraphraseBtn.addEventListener('click', () => {
+                const text = textarea.value.trim();
+                if (!text) {
+                    alert('Please enter some text to paraphrase.');
+                    return;
+                }
+
+                // Get selected style
+                const selectedStyle = document.querySelector('.style-btn.active').dataset.style;
+
+                // Show loading state
+                paraphraseBtn.disabled = true;
+                paraphraseBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Paraphrasing...';
+                outputDiv.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin mr-2"></i>Processing...</div>';
+
+                // Simulate paraphrasing (replace with actual API call)
+                setTimeout(() => {
+                    // Demo paraphrasing based on style
+                    let paraphrasedText;
+                    switch(selectedStyle) {
+                        case 'formal':
+                            paraphrasedText = 'This is a formal paraphrase of your text...';
+                            break;
+                        case 'simple':
+                            paraphrasedText = 'This is a simplified version of your text...';
+                            break;
+                        case 'creative':
+                            paraphrasedText = 'This is a creative rewrite of your text...';
+                            break;
+                        default:
+                            paraphrasedText = 'This is a standard paraphrase of your text...';
+                    }
+
+                    // Update output
+                    outputDiv.innerHTML = `<div class="text-gray-800 dark:text-gray-200">${paraphrasedText}</div>`;
+
+                    // Reset button
+                    paraphraseBtn.disabled = false;
+                    paraphraseBtn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Paraphrase Text';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

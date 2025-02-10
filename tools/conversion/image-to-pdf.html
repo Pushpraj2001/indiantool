@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to PDF Converter - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+    <!-- PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Image to PDF Converter</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-8">
+                <!-- Upload Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Upload Images</h3>
+                        <button id="clear-all" class="tool-btn">
+                            <i class="fas fa-trash-alt mr-1"></i>Clear All
+                        </button>
+                    </div>
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8">
+                        <div class="text-center">
+                            <input type="file" id="file-input" multiple accept="image/*" class="hidden">
+                            <label for="file-input" class="cursor-pointer">
+                                <div class="space-y-4">
+                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400"></i>
+                                    <div class="text-lg">
+                                        Drag & drop images here or <span class="text-indian-saffron">browse</span>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        Supported formats: JPG, PNG, GIF, BMP
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Preview -->
+                <div id="preview-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Selected Images</h3>
+                    <div id="image-list" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Image previews will be added here -->
+                    </div>
+                </div>
+
+                <!-- PDF Options -->
+                <div id="options-section" class="hidden space-y-6">
+                    <h3 class="text-lg font-semibold">PDF Options</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Page Size -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Page Size</label>
+                            <select id="page-size" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="a4">A4 (210 × 297 mm)</option>
+                                <option value="letter">Letter (216 × 279 mm)</option>
+                                <option value="legal">Legal (216 × 356 mm)</option>
+                            </select>
+                        </div>
+
+                        <!-- Orientation -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Orientation</label>
+                            <select id="orientation" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
+
+                        <!-- Image Quality -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Image Quality</label>
+                            <select id="quality" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+
+                        <!-- Margin -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Margin (mm)</label>
+                            <input type="number" id="margin" value="10" min="0" max="50"
+                                class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Convert Button -->
+                <div class="text-center">
+                    <button id="convert-btn" class="px-8 py-3 bg-indian-saffron text-white rounded-lg hover:bg-indian-saffron/90 hidden">
+                        <i class="fas fa-file-pdf mr-2"></i>Convert to PDF
+                    </button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="progress-section" class="hidden space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span>Converting...</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div id="progress-bar" class="bg-indian-saffron h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tool-btn {
+            @apply text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600;
+        }
+        .preview-item {
+            @apply relative rounded-lg overflow-hidden;
+        }
+        .preview-item img {
+            @apply w-full h-48 object-cover;
+        }
+        .preview-item .remove-btn {
+            @apply absolute top-2 right-2 w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center 
+                   opacity-0 transition-opacity hover:bg-red-600;
+        }
+        .preview-item:hover .remove-btn {
+            @apply opacity-100;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const imageList = document.getElementById('image-list');
+            const previewSection = document.getElementById('preview-section');
+            const optionsSection = document.getElementById('options-section');
+            const convertBtn = document.getElementById('convert-btn');
+            const clearAllBtn = document.getElementById('clear-all');
+            const progressSection = document.getElementById('progress-section');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            let uploadedImages = [];
+
+            // File upload handling
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            function handleFileSelect(e) {
+                const files = Array.from(e.target.files);
+                
+                files.forEach(file => {
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please upload only image files.');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageData = {
+                            file: file,
+                            preview: e.target.result
+                        };
+                        uploadedImages.push(imageData);
+                        updateImagePreviews();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Update image previews
+            function updateImagePreviews() {
+                imageList.innerHTML = '';
+                
+                uploadedImages.forEach((image, index) => {
+                    const preview = document.createElement('div');
+                    preview.className = 'preview-item';
+                    preview.innerHTML = `
+                        <img src="${image.preview}" alt="Preview">
+                        <button class="remove-btn" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    imageList.appendChild(preview);
+                });
+
+                // Show/hide sections based on uploaded images
+                previewSection.classList.toggle('hidden', uploadedImages.length === 0);
+                optionsSection.classList.toggle('hidden', uploadedImages.length === 0);
+                convertBtn.classList.toggle('hidden', uploadedImages.length === 0);
+            }
+
+            // Remove image
+            imageList.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-btn')) {
+                    const index = e.target.closest('.remove-btn').dataset.index;
+                    uploadedImages.splice(index, 1);
+                    updateImagePreviews();
+                }
+            });
+
+            // Clear all images
+            clearAllBtn.addEventListener('click', () => {
+                uploadedImages = [];
+                updateImagePreviews();
+                fileInput.value = '';
+            });
+
+            // Convert to PDF
+            convertBtn.addEventListener('click', async () => {
+                if (uploadedImages.length === 0) {
+                    alert('Please upload at least one image.');
+                    return;
+                }
+
+                // Show progress
+                progressSection.classList.remove('hidden');
+                convertBtn.disabled = true;
+                convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Converting...';
+
+                // Simulate conversion process
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    progressBar.style.width = `${progress}%`;
+                    progressText.textContent = `${progress}%`;
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Create and download PDF
+                        const pdf = new jsPDF();
+                        // Add images to PDF (simplified version)
+                        uploadedImages.forEach((image, index) => {
+                            if (index > 0) pdf.addPage();
+                            pdf.addImage(image.preview, 'JPEG', 10, 10, 190, 277);
+                        });
+                        pdf.save('converted-images.pdf');
+
+                        // Reset UI
+                        progressSection.classList.add('hidden');
+                        convertBtn.disabled = false;
+                        convertBtn.innerHTML = '<i class="fas fa-file-pdf mr-2"></i>Convert to PDF';
+                        progressBar.style.width = '0%';
+                        progressText.textContent = '0%';
+                    }
+                }, 100);
+            });
+
+            // Drag and drop handling
+            const dropZone = document.querySelector('.border-dashed');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropZone.classList.add('border-indian-saffron');
+            }
+
+            function unhighlight(e) {
+                dropZone.classList.remove('border-indian-saffron');
+            }
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelect({target: {files: files}});
+            }
+        });
+    </script>
+</body>
+</html>

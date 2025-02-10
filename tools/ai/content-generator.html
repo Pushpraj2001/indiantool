@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Generator - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Content Generator</span>
+                </a>
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                    <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                    <i class="fas fa-sun text-yellow-400 hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-card p-8 rounded-xl">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold mb-4 dark:text-white">AI Content Generator</h1>
+                    <p class="text-gray-600 dark:text-gray-300">Generate creative content for various purposes</p>
+                </div>
+
+                <!-- Content Type Selection -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Content Type</label>
+                    <select id="contentType" class="w-full p-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="blog">Blog Post</option>
+                        <option value="social">Social Media Post</option>
+                        <option value="article">Article</option>
+                        <option value="product">Product Description</option>
+                        <option value="email">Email Template</option>
+                    </select>
+                </div>
+
+                <!-- Topic/Keywords -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Topic/Keywords</label>
+                    <input type="text" id="topic" class="w-full p-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Enter your topic or keywords">
+                </div>
+
+                <!-- Tone Selection -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Tone</label>
+                    <select id="tone" class="w-full p-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="professional">Professional</option>
+                        <option value="casual">Casual</option>
+                        <option value="friendly">Friendly</option>
+                        <option value="formal">Formal</option>
+                        <option value="humorous">Humorous</option>
+                    </select>
+                </div>
+
+                <!-- Length Selection -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Content Length</label>
+                    <select id="length" class="w-full p-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="short">Short (~100 words)</option>
+                        <option value="medium">Medium (~300 words)</option>
+                        <option value="long">Long (~500 words)</option>
+                        <option value="custom">Custom Length</option>
+                    </select>
+                </div>
+
+                <!-- Generate Button -->
+                <button id="generateBtn" class="btn-primary w-full mb-6">
+                    Generate Content <i class="fas fa-magic ml-2"></i>
+                </button>
+
+                <!-- Result Section -->
+                <div id="resultSection" class="hidden">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-2 dark:text-white">Generated Content</h3>
+                        <div class="relative">
+                            <textarea id="generatedContent" class="w-full h-64 p-4 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" readonly></textarea>
+                            <button id="copyBtn" class="absolute top-2 right-2 p-2 bg-gray-100 dark:bg-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex gap-4">
+                        <button id="regenerateBtn" class="btn-secondary flex-1">
+                            <i class="fas fa-redo mr-2"></i> Regenerate
+                        </button>
+                        <button id="downloadBtn" class="btn-secondary flex-1">
+                            <i class="fas fa-download mr-2"></i> Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="loadingIndicator" class="hidden text-center p-4">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+                    <p class="text-gray-600 dark:text-gray-300">Generating content...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const moonIcon = themeToggle.querySelector('.fa-moon');
+        const sunIcon = themeToggle.querySelector('.fa-sun');
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            moonIcon.classList.toggle('hidden');
+            sunIcon.classList.toggle('hidden');
+        });
+
+        // Content Generation Logic
+        const generateBtn = document.getElementById('generateBtn');
+        const resultSection = document.getElementById('resultSection');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const generatedContent = document.getElementById('generatedContent');
+        const copyBtn = document.getElementById('copyBtn');
+        const regenerateBtn = document.getElementById('regenerateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // Sample content templates (replace with actual API integration)
+        const templates = {
+            blog: [
+                "Introduction about {topic}...",
+                "Key points about {topic}...",
+                "Conclusion about {topic}..."
+            ],
+            social: [
+                "📢 Exciting update about {topic}!",
+                "🎉 Check out this amazing {topic}",
+                "💡 Did you know about {topic}?"
+            ]
+        };
+
+        generateBtn.addEventListener('click', async () => {
+            const contentType = document.getElementById('contentType').value;
+            const topic = document.getElementById('topic').value;
+            const tone = document.getElementById('tone').value;
+            const length = document.getElementById('length').value;
+
+            if (!topic) {
+                alert('Please enter a topic');
+                return;
+            }
+
+            loadingIndicator.classList.remove('hidden');
+            resultSection.classList.add('hidden');
+
+            // Simulate API call
+            setTimeout(() => {
+                const template = templates[contentType] || templates.blog;
+                const randomTemplate = template[Math.floor(Math.random() * template.length)];
+                const content = randomTemplate.replace('{topic}', topic);
+                
+                generatedContent.value = content;
+                loadingIndicator.classList.add('hidden');
+                resultSection.classList.remove('hidden');
+            }, 2000);
+        });
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(generatedContent.value);
+            const originalIcon = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                copyBtn.innerHTML = originalIcon;
+            }, 2000);
+        });
+
+        // Regenerate content
+        regenerateBtn.addEventListener('click', () => {
+            generateBtn.click();
+        });
+
+        // Download content
+        downloadBtn.addEventListener('click', () => {
+            const content = generatedContent.value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'generated-content.txt';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>

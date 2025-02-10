@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+    <!-- Add QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">QR Code Generator</h1>
+            
+            <!-- Tool Interface -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Input Section -->
+                <div class="space-y-6">
+                    <!-- Content Type Selection -->
+                    <div>
+                        <label class="block text-lg font-semibold mb-2">Content Type</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                            <button class="content-type-btn active" data-type="text">
+                                <i class="fas fa-font mr-2"></i>Text
+                            </button>
+                            <button class="content-type-btn" data-type="url">
+                                <i class="fas fa-link mr-2"></i>URL
+                            </button>
+                            <button class="content-type-btn" data-type="email">
+                                <i class="fas fa-envelope mr-2"></i>Email
+                            </button>
+                            <button class="content-type-btn" data-type="phone">
+                                <i class="fas fa-phone mr-2"></i>Phone
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Fields -->
+                    <div id="input-fields" class="space-y-4">
+                        <!-- Text Input -->
+                        <div id="text-input" class="input-field">
+                            <label class="block text-sm font-medium mb-2">Enter Text</label>
+                            <textarea 
+                                class="w-full h-32 p-3 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                                placeholder="Enter text to generate QR code..."></textarea>
+                        </div>
+
+                        <!-- URL Input -->
+                        <div id="url-input" class="input-field hidden">
+                            <label class="block text-sm font-medium mb-2">Enter URL</label>
+                            <input type="url" 
+                                class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                                placeholder="https://example.com">
+                        </div>
+
+                        <!-- Email Input -->
+                        <div id="email-input" class="input-field hidden">
+                            <label class="block text-sm font-medium mb-2">Email Details</label>
+                            <input type="email" 
+                                class="w-full p-3 mb-2 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                                placeholder="Email address">
+                            <input type="text" 
+                                class="w-full p-3 mb-2 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                                placeholder="Subject (optional)">
+                            <textarea 
+                                class="w-full h-24 p-3 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                                placeholder="Email body (optional)"></textarea>
+                        </div>
+
+                        <!-- Phone Input -->
+                        <div id="phone-input" class="input-field hidden">
+                            <label class="block text-sm font-medium mb-2">Enter Phone Number</label>
+                            <input type="tel" 
+                                class="w-full p-3 rounded-lg border focus:ring-2 focus:ring-indian-saffron dark:bg-gray-800 dark:text-white"
+                                placeholder="+1234567890">
+                        </div>
+                    </div>
+
+                    <!-- QR Code Options -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold">QR Code Options</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Size</label>
+                                <select id="qr-size" class="w-full p-2 rounded-lg border dark:bg-gray-800">
+                                    <option value="128">Small (128x128)</option>
+                                    <option value="256" selected>Medium (256x256)</option>
+                                    <option value="512">Large (512x512)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Error Correction</label>
+                                <select id="qr-correction" class="w-full p-2 rounded-lg border dark:bg-gray-800">
+                                    <option value="L">Low (7%)</option>
+                                    <option value="M" selected>Medium (15%)</option>
+                                    <option value="Q">Quartile (25%)</option>
+                                    <option value="H">High (30%)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button id="generate-btn" class="w-full py-3 bg-indian-saffron text-white rounded-lg hover:bg-indian-saffron/90">
+                        <i class="fas fa-qrcode mr-2"></i>Generate QR Code
+                    </button>
+                </div>
+
+                <!-- Output Section -->
+                <div class="space-y-6">
+                    <h2 class="text-lg font-semibold">Generated QR Code</h2>
+                    <div id="qrcode-container" class="flex flex-col items-center space-y-4">
+                        <div id="qrcode" class="bg-white p-4 rounded-lg"></div>
+                        <button id="download-btn" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 hidden">
+                            <i class="fas fa-download mr-2"></i>Download QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .content-type-btn {
+            @apply px-3 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-sm text-center;
+        }
+        .content-type-btn.active {
+            @apply bg-indian-saffron text-white hover:bg-indian-saffron/90;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeButtons = document.querySelectorAll('.content-type-btn');
+            const inputFields = document.querySelectorAll('.input-field');
+            const generateBtn = document.getElementById('generate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const qrContainer = document.getElementById('qrcode');
+            let qrcode = null;
+
+            // Switch between input types
+            typeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Update active button
+                    typeButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Show relevant input field
+                    const type = btn.dataset.type;
+                    inputFields.forEach(field => {
+                        field.classList.add('hidden');
+                    });
+                    document.getElementById(`${type}-input`).classList.remove('hidden');
+                });
+            });
+
+            // Generate QR Code
+            generateBtn.addEventListener('click', () => {
+                const activeType = document.querySelector('.content-type-btn.active').dataset.type;
+                const size = parseInt(document.getElementById('qr-size').value);
+                const correction = document.getElementById('qr-correction').value;
+                
+                let content = '';
+                switch(activeType) {
+                    case 'text':
+                        content = document.querySelector('#text-input textarea').value;
+                        break;
+                    case 'url':
+                        content = document.querySelector('#url-input input').value;
+                        break;
+                    case 'email':
+                        const email = document.querySelector('#email-input input[type="email"]').value;
+                        const subject = document.querySelector('#email-input input[type="text"]').value;
+                        const body = document.querySelector('#email-input textarea').value;
+                        content = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                        break;
+                    case 'phone':
+                        content = `tel:${document.querySelector('#phone-input input').value}`;
+                        break;
+                }
+
+                if (!content) {
+                    alert('Please enter content to generate QR code.');
+                    return;
+                }
+
+                // Clear previous QR code
+                qrContainer.innerHTML = '';
+
+                // Generate new QR code
+                qrcode = new QRCode(qrContainer, {
+                    text: content,
+                    width: size,
+                    height: size,
+                    correctLevel: QRCode.CorrectLevel[correction]
+                });
+
+                // Show download button
+                downloadBtn.classList.remove('hidden');
+            });
+
+            // Download QR Code
+            downloadBtn.addEventListener('click', () => {
+                const canvas = qrContainer.querySelector('canvas');
+                if (canvas) {
+                    const link = document.createElement('a');
+                    link.download = 'qrcode.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

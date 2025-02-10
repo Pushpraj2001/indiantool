@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech to Text - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Speech to Text</span>
+                </a>
+                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                    <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                    <i class="fas fa-sun text-yellow-400 hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="glass-card p-8 rounded-xl">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold mb-4 dark:text-white">Speech to Text Converter</h1>
+                    <p class="text-gray-600 dark:text-gray-300">Convert speech to text in multiple languages</p>
+                </div>
+
+                <!-- Language Selection -->
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Language</label>
+                    <select id="language" class="w-full p-3 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="en-IN">English (India)</option>
+                        <option value="hi-IN">Hindi</option>
+                        <option value="bn-IN">Bengali</option>
+                        <option value="ta-IN">Tamil</option>
+                        <option value="te-IN">Telugu</option>
+                        <option value="mr-IN">Marathi</option>
+                        <option value="gu-IN">Gujarati</option>
+                        <option value="kn-IN">Kannada</option>
+                        <option value="ml-IN">Malayalam</option>
+                    </select>
+                </div>
+
+                <!-- Recording Controls -->
+                <div class="flex flex-col items-center mb-8">
+                    <div class="recording-indicator mb-4">
+                        <div id="waveform" class="h-16 w-64 flex items-center justify-center">
+                            <div class="recording-wave hidden">
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button id="startBtn" class="btn-primary px-6">
+                            <i class="fas fa-microphone mr-2"></i> Start Recording
+                        </button>
+                        <button id="stopBtn" class="btn-secondary px-6 hidden">
+                            <i class="fas fa-stop mr-2"></i> Stop Recording
+                        </button>
+                    </div>
+                </div>
+
+                <!-- File Upload -->
+                <div class="mb-8">
+                    <div class="upload-area border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
+                        <input type="file" id="audioInput" class="hidden" accept="audio/*">
+                        <label for="audioInput" class="cursor-pointer">
+                            <div class="mb-4">
+                                <i class="fas fa-cloud-upload-alt text-4xl text-indigo-500"></i>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300">Click to upload or drag and drop</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">MP3, WAV, M4A files</p>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Transcription Result -->
+                <div id="resultSection" class="hidden">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold mb-2 dark:text-white">Transcribed Text</h3>
+                        <div class="relative">
+                            <textarea id="transcriptionResult" class="w-full h-48 p-4 rounded-lg bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500" readonly></textarea>
+                            <button id="copyBtn" class="absolute top-2 right-2 p-2 bg-gray-100 dark:bg-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex gap-4">
+                        <button id="downloadBtn" class="btn-secondary flex-1">
+                            <i class="fas fa-download mr-2"></i> Download Text
+                        </button>
+                        <button id="clearBtn" class="btn-secondary flex-1">
+                            <i class="fas fa-trash mr-2"></i> Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="loadingIndicator" class="hidden text-center p-4">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto mb-4"></div>
+                    <p class="text-gray-600 dark:text-gray-300">Processing audio...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .recording-wave {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            height: 20px;
+            background-color: #6366f1;
+            border-radius: 3px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { height: 20px; }
+            50% { height: 40px; }
+        }
+    </style>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        const moonIcon = themeToggle.querySelector('.fa-moon');
+        const sunIcon = themeToggle.querySelector('.fa-sun');
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            moonIcon.classList.toggle('hidden');
+            sunIcon.classList.toggle('hidden');
+        });
+
+        // Speech Recognition Setup
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resultSection = document.getElementById('resultSection');
+        const transcriptionResult = document.getElementById('transcriptionResult');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const recordingWave = document.querySelector('.recording-wave');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const languageSelect = document.getElementById('language');
+
+        let recognition = null;
+
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+        } else {
+            startBtn.disabled = true;
+            startBtn.innerHTML = 'Speech Recognition Not Supported';
+        }
+
+        if (recognition) {
+            recognition.onstart = () => {
+                startBtn.classList.add('hidden');
+                stopBtn.classList.remove('hidden');
+                recordingWave.classList.remove('hidden');
+            };
+
+            recognition.onend = () => {
+                startBtn.classList.remove('hidden');
+                stopBtn.classList.add('hidden');
+                recordingWave.classList.add('hidden');
+            };
+
+            recognition.onresult = (event) => {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript + ' ';
+                    }
+                }
+                if (finalTranscript) {
+                    resultSection.classList.remove('hidden');
+                    transcriptionResult.value = finalTranscript;
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                startBtn.classList.remove('hidden');
+                stopBtn.classList.add('hidden');
+                recordingWave.classList.add('hidden');
+            };
+        }
+
+        // Recording Controls
+        startBtn.addEventListener('click', () => {
+            if (recognition) {
+                recognition.lang = languageSelect.value;
+                recognition.start();
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (recognition) {
+                recognition.stop();
+            }
+        });
+
+        // Copy to clipboard
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(transcriptionResult.value);
+            const originalIcon = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            setTimeout(() => {
+                copyBtn.innerHTML = originalIcon;
+            }, 2000);
+        });
+
+        // Download transcription
+        downloadBtn.addEventListener('click', () => {
+            const text = transcriptionResult.value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'transcription.txt';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        });
+
+        // Clear transcription
+        clearBtn.addEventListener('click', () => {
+            transcriptionResult.value = '';
+            resultSection.classList.add('hidden');
+        });
+
+        // File Upload Handler
+        const audioInput = document.getElementById('audioInput');
+        const uploadArea = document.querySelector('.upload-area');
+
+        audioInput.addEventListener('change', handleAudioUpload);
+
+        function handleAudioUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                loadingIndicator.classList.remove('hidden');
+                // Simulate file processing (replace with actual API integration)
+                setTimeout(() => {
+                    loadingIndicator.classList.add('hidden');
+                    resultSection.classList.remove('hidden');
+                    transcriptionResult.value = `Transcription of ${file.name} would appear here.`;
+                }, 2000);
+            }
+        }
+
+        // Drag and Drop Handlers
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            uploadArea.classList.add('border-indigo-500');
+        }
+
+        function unhighlight(e) {
+            uploadArea.classList.remove('border-indigo-500');
+        }
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            audioInput.files = files;
+            handleAudioUpload({ target: { files: files } });
+        }
+    </script>
+</body>
+</html>

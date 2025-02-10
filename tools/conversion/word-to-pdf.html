@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word to PDF Converter - Indian Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body class="bg-gradient-to-br from-orange-100 via-white to-green-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-nav backdrop-blur-md bg-white/70 dark:bg-gray-800/70 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="../../index.html" class="flex items-center">
+                    <div class="indian-logo">
+                        <span class="om-symbol">ॐ</span>
+                    </div>
+                    <span class="ml-2 text-xl font-bold">Indian Tools</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                        <i class="fas fa-moon text-gray-600 dark:text-gray-400"></i>
+                        <i class="fas fa-sun text-yellow-400 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tool Content -->
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-card rounded-lg p-8 max-w-4xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6 text-center">Word to PDF Converter</h1>
+            
+            <!-- Tool Interface -->
+            <div class="space-y-8">
+                <!-- Upload Section -->
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold">Upload Word Document</h3>
+                        <button id="clear-file" class="tool-btn hidden">
+                            <i class="fas fa-trash-alt mr-1"></i>Clear
+                        </button>
+                    </div>
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8">
+                        <div class="text-center">
+                            <input type="file" id="file-input" accept=".doc,.docx" class="hidden">
+                            <label for="file-input" class="cursor-pointer">
+                                <div class="space-y-4">
+                                    <i class="fas fa-file-word text-4xl text-gray-400"></i>
+                                    <div class="text-lg">
+                                        Drag & drop Word document here or <span class="text-indian-saffron">browse</span>
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        Supported formats: DOC, DOCX
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Info -->
+                <div id="file-info-section" class="hidden space-y-4">
+                    <h3 class="text-lg font-semibold">Document Information</h3>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-6">
+                        <div class="flex items-center space-x-4">
+                            <i class="fas fa-file-word text-2xl text-blue-500"></i>
+                            <div>
+                                <div id="file-name" class="font-medium"></div>
+                                <div id="file-size" class="text-sm text-gray-500"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Conversion Options -->
+                <div id="options-section" class="hidden space-y-6">
+                    <h3 class="text-lg font-semibold">PDF Options</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Page Size -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Page Size</label>
+                            <select id="page-size" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="a4">A4 (210 × 297 mm)</option>
+                                <option value="letter">Letter (216 × 279 mm)</option>
+                                <option value="legal">Legal (216 × 356 mm)</option>
+                            </select>
+                        </div>
+
+                        <!-- Orientation -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Orientation</label>
+                            <select id="orientation" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="portrait">Portrait</option>
+                                <option value="landscape">Landscape</option>
+                            </select>
+                        </div>
+
+                        <!-- Quality -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">PDF Quality</label>
+                            <select id="quality" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="high">High (Larger file size)</option>
+                                <option value="medium">Medium (Recommended)</option>
+                                <option value="low">Low (Smaller file size)</option>
+                            </select>
+                        </div>
+
+                        <!-- Font Embedding -->
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Font Handling</label>
+                            <select id="font-handling" class="w-full p-3 rounded-lg border dark:bg-gray-800">
+                                <option value="embed">Embed All Fonts</option>
+                                <option value="subset">Subset Fonts</option>
+                                <option value="none">No Font Embedding</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Additional Options -->
+                    <div class="space-y-4">
+                        <h4 class="font-medium">Additional Options</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" id="preserve-links" checked 
+                                    class="w-4 h-4 text-indian-saffron rounded">
+                                <span>Preserve Hyperlinks</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" id="preserve-bookmarks" checked 
+                                    class="w-4 h-4 text-indian-saffron rounded">
+                                <span>Preserve Bookmarks</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" id="optimize-images" checked 
+                                    class="w-4 h-4 text-indian-saffron rounded">
+                                <span>Optimize Images</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Convert Button -->
+                <div class="text-center">
+                    <button id="convert-btn" class="px-8 py-3 bg-indian-saffron text-white rounded-lg hover:bg-indian-saffron/90 hidden">
+                        <i class="fas fa-file-pdf mr-2"></i>Convert to PDF
+                    </button>
+                </div>
+
+                <!-- Progress Bar -->
+                <div id="progress-section" class="hidden space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span id="progress-status">Converting...</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                        <div id="progress-bar" class="bg-indian-saffron h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .tool-btn {
+            @apply text-sm px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600;
+        }
+    </style>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            const clearFileBtn = document.getElementById('clear-file');
+            const fileInfoSection = document.getElementById('file-info-section');
+            const optionsSection = document.getElementById('options-section');
+            const convertBtn = document.getElementById('convert-btn');
+            const progressSection = document.getElementById('progress-section');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const progressStatus = document.getElementById('progress-status');
+            const fileName = document.getElementById('file-name');
+            const fileSize = document.getElementById('file-size');
+
+            let currentFile = null;
+
+            // File upload handling
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            function handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const validTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Please upload a valid Word document (DOC or DOCX).');
+                    return;
+                }
+
+                currentFile = file;
+                updateFileInfo();
+            }
+
+            // Update file information
+            function updateFileInfo() {
+                if (!currentFile) return;
+
+                fileName.textContent = currentFile.name;
+                fileSize.textContent = formatFileSize(currentFile.size);
+
+                // Show sections
+                fileInfoSection.classList.remove('hidden');
+                optionsSection.classList.remove('hidden');
+                convertBtn.classList.remove('hidden');
+                clearFileBtn.classList.remove('hidden');
+            }
+
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            // Clear file
+            clearFileBtn.addEventListener('click', () => {
+                currentFile = null;
+                fileInput.value = '';
+                fileInfoSection.classList.add('hidden');
+                optionsSection.classList.add('hidden');
+                convertBtn.classList.add('hidden');
+                clearFileBtn.classList.add('hidden');
+                progressSection.classList.add('hidden');
+            });
+
+            // Convert to PDF
+            convertBtn.addEventListener('click', async () => {
+                if (!currentFile) {
+                    alert('Please upload a Word document.');
+                    return;
+                }
+
+                // Show progress
+                progressSection.classList.remove('hidden');
+                convertBtn.disabled = true;
+                convertBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Converting...';
+
+                // Simulate conversion process
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 2;
+                    progressBar.style.width = `${progress}%`;
+                    progressText.textContent = `${progress}%`;
+
+                    if (progress < 30) {
+                        progressStatus.textContent = 'Reading document...';
+                    } else if (progress < 60) {
+                        progressStatus.textContent = 'Converting content...';
+                    } else if (progress < 90) {
+                        progressStatus.textContent = 'Generating PDF...';
+                    } else {
+                        progressStatus.textContent = 'Finalizing...';
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        
+                        // Simulate download
+                        const link = document.createElement('a');
+                        link.href = '#';
+                        link.download = currentFile.name.replace(/\.(doc|docx)$/i, '.pdf');
+                        link.click();
+
+                        // Reset UI
+                        progressSection.classList.add('hidden');
+                        convertBtn.disabled = false;
+                        convertBtn.innerHTML = '<i class="fas fa-file-pdf mr-2"></i>Convert to PDF';
+                        progressBar.style.width = '0%';
+                        progressText.textContent = '0%';
+                        progressStatus.textContent = 'Converting...';
+                    }
+                }, 100);
+            });
+
+            // Drag and drop handling
+            const dropZone = document.querySelector('.border-dashed');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropZone.classList.add('border-indian-saffron');
+            }
+
+            function unhighlight(e) {
+                dropZone.classList.remove('border-indian-saffron');
+            }
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelect({target: {files: files}});
+            }
+        });
+    </script>
+</body>
+</html>
